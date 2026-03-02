@@ -1,0 +1,31 @@
+{
+  "name": "dotrak-monorepo",
+  "version": "1.0.0",
+  "description": "Dotrak - Plataforma Gamer Full Stack (Frontend + Backend)",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:frontend": "cd frontend && npm run build",
+    "start:backend": "cd backend && npm start",
+    "clean": "rd /s /q frontend\\node_modules backend\\node_modules node_modules 2>nul || true"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "dotrak",
+    "gaming",
+    "esports",
+    "monorepo",
+    "fullstack"
+  ],
+  "author": "",
+  "license": "MIT"
+}

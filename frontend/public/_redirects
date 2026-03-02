@@ -1,0 +1,14 @@
+# Redirects e Rewrites - Dotrak
+
+# SPA fallback - todas as rotas devem ir para index.html
+/*  /index.html  200
+
+# Redirects permanentes (301) para SEO
+/home  /  301
+/inicio  /  301
+
+# URLs antigas ou alternativas
+/cs2  /#recursos  301
+/valorant  /#recursos  301
+/torneios  /#comunidade  301
+/comunidade  /#comunidade  301

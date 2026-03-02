@@ -1,0 +1,27 @@
+# Robots.txt para Dotrak - Plataforma de Análise CS2 e E-Sports
+User-agent: *
+Allow: /
+
+# Otimizações para crawlers
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Disallow admin e arquivos privados
+Disallow: /admin/
+Disallow: /api/private/
+Disallow: /*.json$
+
+# Sitemap
+Sitemap: https://dotrak.com/sitemap.xml
+
+# Cache policy hint
+User-agent: *
+Cache-delay: 3600
