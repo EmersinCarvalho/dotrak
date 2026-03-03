@@ -3,16 +3,16 @@ import './About.css';
 export default function About() {
   const features = [
     {
-      title: 'Análise de CS2 e Valorant com IA',
-      description: 'Estatísticas detalhadas, heatmaps, análise de replays e insights instantâneos sobre seu desempenho em CS2, Valorant e outros jogos competitivos.',
+      title: 'Comunidade de Gamers',
+      description: 'Um espaço criado para reunir jogadores apaixonados por e-sports. Conecte-se, compartilhe experiências e divirta-se com outros entusiastas de CS2, Valorant e muito mais.',
     },
     {
-      title: 'Comunidade E-Sports Ativa',
-      description: 'Conecte-se com milhares de jogadores, forme times profissionais, participe de torneios online e eventos de e-sports exclusivos.',
+      title: 'Recursos em Desenvolvimento',
+      description: 'Estou constantemente trabalhando em novas ferramentas e funcionalidades para ajudar você a acompanhar suas estatísticas, melhorar seu desempenho e aproveitar ao máximo a plataforma.',
     },
     {
-      title: 'Tecnologia e IA Avançada',
-      description: 'Machine learning e inteligência artificial analisando suas partidas para fornecer recomendações personalizadas e acelerar sua evolução.',
+      title: 'Suporte e Ajuda Mútua',
+      description: 'Tire suas dúvidas, compartilhe dicas e aprenda com a comunidade. Este é um projeto em evolução, feito de gamers para gamers, onde todos podem contribuir e crescer juntos.',
     },
   ];
 
@@ -22,9 +22,10 @@ export default function About() {
         <div className="about-header scroll-animate">
           <h2>O que é a <span className="text-yellow">Dotrak</span>?</h2>
           <p>
-            Dotrak é a plataforma tecnológica que revoluciona a forma como gamers competitivos 
-            treinam em CS2, Valorant, League of Legends e Dota 2. Combinamos IA de ponta, análise de dados 
-            em tempo real e uma comunidade vibrante de e-sports para levar seu jogo ao próximo nível.
+            Dotrak é um projeto pessoal criado com o objetivo de reunir pessoas apaixonadas por jogos competitivos. 
+            Aqui você encontra um espaço para se divertir, acompanhar estatísticas, tirar dúvidas e participar de 
+            uma comunidade que está crescendo. É um trabalho em progresso, feito com dedicação para oferecer 
+            recursos úteis e criar conexões entre jogadores.
           </p>
         </div>
 

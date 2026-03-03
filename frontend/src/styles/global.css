@@ -79,6 +79,18 @@ img {
   display: block;
 }
 
+/* Loading Screen */
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  color: var(--color-yellow);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
 /* Animações Globais */
 @keyframes fadeIn {
   from {

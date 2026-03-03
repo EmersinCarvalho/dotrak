@@ -29,8 +29,8 @@ export default function Contact() {
   };
 
   return (
-    <section id="contato" className="contact" style={{backgroundImage: `url(${contactImage})`}}>
-      <div className="contact-overlay"></div>
+    <section id="contato" className="contact">
+      <div className="contact-bg" style={{backgroundImage: `url(${contactImage})`}} role="img" aria-label="Background Contact"></div>
       <div className="container">
         <div className="contact-content">
           <div className="contact-info scroll-animate-left">

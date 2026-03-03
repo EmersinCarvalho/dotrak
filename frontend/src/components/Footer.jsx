@@ -58,8 +58,6 @@ export default function Footer() {
           <div className="footer-section">
             <h4>Links Rápidos</h4>
             <ul>
-              <li><a href="#roadmap" onClick={(e) => scrollToSection(e, 'roadmap')}>Roadmap</a></li>
-              <li><a href="#faq" onClick={(e) => scrollToSection(e, 'faq')}>FAQ</a></li>
               <li><a href="#contato" onClick={(e) => scrollToSection(e, 'contato')}>Contato</a></li>
               <li><Link to="/login">Login</Link></li>
             </ul>

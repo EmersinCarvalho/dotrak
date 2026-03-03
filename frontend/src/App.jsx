@@ -1,10 +1,12 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import Login from './pages/Login';
 import './styles/global.css';
+
+const Home = lazy(() => import('./pages/Home'));
+const Login = lazy(() => import('./pages/Login'));
 
 function Layout() {
   const location = useLocation();
@@ -13,10 +15,12 @@ function Layout() {
   return (
     <>
       {!isLoginPage && <Header />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+      <Suspense fallback={<div className="loading-screen">Carregando...</div>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </Suspense>
       {!isLoginPage && <Footer />}
     </>
   );

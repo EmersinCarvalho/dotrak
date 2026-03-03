@@ -55,8 +55,6 @@ export default function Header() {
           <li><a href="#sobre" onClick={(e) => scrollToSection(e, 'sobre')}>Sobre</a></li>
           <li><a href="#recursos" onClick={(e) => scrollToSection(e, 'recursos')}>Recursos</a></li>
           <li><a href="#comunidade" onClick={(e) => scrollToSection(e, 'comunidade')}>Comunidade</a></li>
-          <li><a href="#roadmap" onClick={(e) => scrollToSection(e, 'roadmap')}>Roadmap</a></li>
-          <li><a href="#faq" onClick={(e) => scrollToSection(e, 'faq')}>FAQ</a></li>
           <li><a href="#contato" onClick={(e) => scrollToSection(e, 'contato')}>Contato</a></li>
           <li className="nav-cta">
             <Link to="/login" className="btn btn-primary">

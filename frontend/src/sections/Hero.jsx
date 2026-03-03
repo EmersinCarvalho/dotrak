@@ -11,8 +11,8 @@ export default function Hero() {
   };
 
   return (
-    <section id="inicio" className="hero" style={{backgroundImage: `url(${heroImage})`}}>
-      <div className="hero-overlay"></div>
+    <section id="inicio" className="hero">
+      <div className="hero-bg" style={{backgroundImage: `url(${heroImage})`}} role="img" aria-label="Background Hero"></div>
       <div className="container hero-content">
         <h1>
           Welcome to <span className="text-yellow">Dotrak</span>.<br />

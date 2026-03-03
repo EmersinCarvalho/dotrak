@@ -4,44 +4,44 @@ import './Features.css';
 export default function Features() {
   const features = [
     {
-      icon: '📊',
-      title: 'Dashboard Analítico',
-      description: 'Visualize todas as suas estatísticas em um painel intuitivo e personalizável.',
+      icon: '🎮',
+      title: 'Organize Partidas de CS2',
+      description: 'Chame até 10 amigos e organize um mix completo! Crie partidas personalizadas e divirta-se com sua galera.',
     },
     {
-      icon: '🎯',
-      title: 'Treinamento Focado',
-      description: 'Exercícios adaptativos baseados nos seus pontos fracos identificados pela IA.',
+      icon: '📊',
+      title: 'Acompanhe suas Estatísticas',
+      description: 'Veja seu desempenho, histórico de partidas e evolução ao longo do tempo em um painel simples e direto.',
     },
     {
       icon: '🏆',
-      title: 'Torneios Exclusivos',
-      description: 'Participe de competições diárias, semanais e mensais com premiações reais.',
+      title: 'Sistema de Classificação',
+      description: 'Suba no ranking, acompanhe sua posição e veja como você se compara com outros jogadores da comunidade.',
     },
     {
-      icon: '👥',
-      title: 'Matchmaking Inteligente',
-      description: 'Sistema avançado que encontra jogadores do seu nível para treinos balanceados.',
+      icon: '🎁',
+      title: 'Sorteios Exclusivos VIP',
+      description: 'Participe de sorteios especiais e ganhe prêmios. Membros VIP têm acesso a benefícios e sorteios exclusivos.',
     },
     {
-      icon: '🎬',
-      title: 'Replay Avançado',
-      description: 'Reveja suas partidas com ferramentas profissionais de análise frame-a-frame.',
+      icon: '🎨',
+      title: 'Personalize suas Skins',
+      description: 'Escolha e configure suas skins favoritas, monte seu inventário e mostre seu estilo nas partidas.',
     },
     {
-      icon: '🔔',
-      title: 'Notificações Smart',
-      description: 'Receba alertas personalizados sobre eventos, torneios e atualizações relevantes.',
+      icon: '💬',
+      title: 'Suporte e Dúvidas',
+      description: 'Tire suas dúvidas, receba ajuda da comunidade e aprenda com outros jogadores sempre que precisar.',
     },
   ];
 
   return (
-    <section id="recursos" className="features" style={{backgroundImage: `url(${featuresImage})`}}>
-      <div className="features-overlay"></div>
+    <section id="recursos" className="features">
+      <div className="features-bg" style={{backgroundImage: `url(${featuresImage})`}} role="img" aria-label="Background Features"></div>
       <div className="container">
         <div className="features-header text-center scroll-animate">
-          <h2>Recursos <span className="text-yellow">Poderosos</span></h2>
-          <p>Tudo que você precisa para se tornar um competidor de elite</p>
+          <h2>Recursos <span className="text-yellow">Disponíveis</span></h2>
+          <p>Ferramentas práticas para você e seus amigos se divertirem</p>
         </div>
 
         <div className="features-grid">

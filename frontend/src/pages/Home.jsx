@@ -4,8 +4,6 @@ import Hero from '../sections/Hero';
 import About from '../sections/About';
 import Features from '../sections/Features';
 import Community from '../sections/Community';
-import Roadmap from '../sections/Roadmap';
-import FAQ from '../sections/FAQ';
 import Contact from '../sections/Contact';
 
 export default function Home() {
@@ -101,8 +99,6 @@ export default function Home() {
         <About />
         <Features />
         <Community />
-        <Roadmap />
-        <FAQ />
         <Contact />
       </main>
     </>
