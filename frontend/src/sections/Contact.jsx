@@ -45,7 +45,7 @@ export default function Contact() {
                 <div className="contact-icon" aria-hidden="true">📧</div>
                 <div>
                   <h4>Email</h4>
-                  <a href="mailto:contato@dotrak.com">contato@dotrak.com</a>
+                  <a href="mailto:emerson.carvalhoo5525@gmail.com">emerson.carvalhoo5525@gmail.com</a>
                 </div>
               </div>
 
@@ -53,8 +53,8 @@ export default function Contact() {
                 <div className="contact-icon" aria-hidden="true">💬</div>
                 <div>
                   <h4>Discord</h4>
-                  <a href="https://discord.gg/dotrak" target="_blank" rel="noopener noreferrer">
-                    discord.gg/dotrak
+                  <a href="https://discord.gg/GdzDeH9uWB" target="_blank" rel="noopener noreferrer">
+                    discord.gg/GdzDeH9uWB
                   </a>
                 </div>
               </div>

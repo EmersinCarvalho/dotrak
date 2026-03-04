@@ -21,7 +21,7 @@ export default function Home() {
       "query-input": "required name=search_term_string"
     },
     "sameAs": [
-      "https://discord.gg/dotrak",
+      "https://discord.gg/GdzDeH9uWB",
       "https://twitter.com/dotrak",
       "https://youtube.com/@dotrak"
     ]
@@ -36,7 +36,7 @@ export default function Home() {
     "description": "Plataforma tecnológica para gamers competitivos de CS2, Valorant, League of Legends e Dota 2.",
     "contactPoint": {
       "@type": "ContactPoint",
-      "email": "contato@dotrak.com",
+      "email": "emerson.carvalhoo5525@gmail.com",
       "contactType": "Customer Support",
       "availableLanguage": ["Portuguese", "English"]
     }

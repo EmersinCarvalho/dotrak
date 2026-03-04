@@ -10,7 +10,7 @@ export const navLinks = [
 
 export const socialLinks = [
   { name: 'Twitter', url: 'https://twitter.com/dotrak', icon: 'twitter' },
-  { name: 'Discord', url: 'https://discord.gg/dotrak', icon: 'discord' },
+  { name: 'Discord', url: 'https://discord.gg/GdzDeH9uWB', icon: 'discord' },
   { name: 'YouTube', url: 'https://youtube.com/@dotrak', icon: 'youtube' },
   { name: 'Twitch', url: 'https://twitch.tv/dotrak', icon: 'twitch' },
 ];
