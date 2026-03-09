@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Community.css';
 import comunidade1 from '../assets/comunidade-1.jpg';
@@ -8,62 +7,13 @@ import comunidade4 from '../assets/comunidade-4.jpg';
 import comunidade5 from '../assets/comunidade-5.jpg';
 import comunidade6 from '../assets/comunidade-6.jpg';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
 export default function Community() {
-  const [stats, setStats] = useState({
+  // Estatísticas estáticas da comunidade
+  const stats = {
     activeGamers: '150+',
     matchesAnalyzed: '500+',
     tournamentsHeld: '12+',
     supportAvailability: '24/7'
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await fetch(`${API_URL}/stats`);
-        
-        if (!response.ok) {
-          throw new Error('Erro ao carregar estatísticas');
-        }
-
-        const data = await response.json();
-        
-        if (data.success && data.data) {
-          setStats({
-            activeGamers: formatNumber(data.data.activeGamers),
-            matchesAnalyzed: formatNumber(data.data.matchesAnalyzed),
-            tournamentsHeld: `${data.data.tournamentsHeld}+`,
-            supportAvailability: data.data.supportAvailability
-          });
-        }
-      } catch (err) {
-        console.error('Erro ao buscar estatísticas:', err);
-        setError(err.message);
-        // Mantém valores padrão em caso de erro
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStats();
-    
-    // Atualizar estatísticas a cada 30 segundos
-    const interval = setInterval(fetchStats, 30000);
-    
-    return () => clearInterval(interval);
-  }, []);
-
-  const formatNumber = (num) => {
-    if (num >= 1000000) {
-      return (num / 1000000).toFixed(1).replace('.0', '') + 'M+';
-    }
-    if (num >= 1000) {
-      return (num / 1000).toFixed(0) + 'K+';
-    }
-    return num + '+';
   };
 
   const statsArray = [
@@ -104,16 +54,12 @@ export default function Community() {
 
         <div className="community-content">
           <div className="community-stats scroll-animate-up">
-            {loading && !error ? (
-              <div className="loading-stats">Carregando estatísticas...</div>
-            ) : (
-              statsArray.map((stat, index) => (
-                <div key={index} className="stat-item">
-                  <div className="stat-number">{stat.number}</div>
-                  <div className="stat-label">{stat.label}</div>
-                </div>
-              ))
-            )}
+            {statsArray.map((stat, index) => (
+              <div key={index} className="stat-item">
+                <div className="stat-number">{stat.number}</div>
+                <div className="stat-label">{stat.label}</div>
+              </div>
+            ))}
           </div>
 
           <div className="community-cta scroll-animate">
