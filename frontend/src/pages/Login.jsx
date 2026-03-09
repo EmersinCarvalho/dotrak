@@ -8,11 +8,12 @@ import logo from '../assets/logo.png';
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    nickname: '',
     email: '',
     password: '',
+    confirmPassword: '',
   });
+  const [passwordError, setPasswordError] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -24,6 +25,14 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Validar senhas no Sign Up
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      setPasswordError('As senhas não correspondem');
+      return;
+    }
+    
+    setPasswordError('');
     console.log('Form submitted:', formData);
     // Implementar lógica de autenticação aqui
   };
@@ -64,49 +73,32 @@ export default function Login() {
 
               <form className="login-form" onSubmit={handleSubmit} aria-label={isLogin ? 'Login form' : 'Sign up form'}>
                 {!isLogin && (
-                  <>
-                    <div className="form-group">
-                      <label htmlFor="firstName" className="sr-only">First name</label>
-                      <input
-                        type="text"
-                        id="firstName"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        required
-                        placeholder="First name"
-                        autoComplete="given-name"
-                        aria-required="true"
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="lastName" className="sr-only">Last name</label>
-                      <input
-                        type="text"
-                        id="lastName"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        required
-                        placeholder="Last name"
-                        autoComplete="family-name"
-                        aria-required="true"
-                      />
-                    </div>
-                  </>
+                  <div className="form-group">
+                    <label htmlFor="nickname" className="sr-only">Nickname</label>
+                    <input
+                      type="text"
+                      id="nickname"
+                      name="nickname"
+                      value={formData.nickname}
+                      onChange={handleChange}
+                      required
+                      placeholder="Nickname"
+                      autoComplete="username"
+                      aria-required="true"
+                    />
+                  </div>
                 )}
 
                 <div className="form-group">
-                  <label htmlFor="email" className="sr-only">Email address</label>
+                  <label htmlFor="email" className="sr-only">Nickname ou email address</label>
                   <input
-                    type="email"
+                    type="text"
                     id="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    placeholder="Email address"
+                    placeholder="Nickname ou email address"
                     autoComplete="email"
                     aria-required="true"
                   />
@@ -126,6 +118,27 @@ export default function Login() {
                     aria-required="true"
                   />
                 </div>
+
+                {!isLogin && (
+                  <div className="form-group">
+                    <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required
+                      placeholder="Confirm Password"
+                      autoComplete="new-password"
+                      aria-required="true"
+                      aria-invalid={passwordError ? "true" : "false"}
+                    />
+                    {passwordError && (
+                      <span className="error-message" role="alert">{passwordError}</span>
+                    )}
+                  </div>
+                )}
 
                 {isLogin && (
                   <div className="form-options">

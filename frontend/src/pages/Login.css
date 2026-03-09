@@ -162,6 +162,23 @@
   box-shadow: 0 0 0 3px rgba(255, 208, 0, 0.1);
 }
 
+.error-message {
+  display: block;
+  color: #ff4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input[aria-invalid="true"] {
+  border-color: #ff4444;
+}
+
+.form-group input[aria-invalid="true"]:focus {
+  border-color: #ff4444;
+  box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
+}
+
 .form-options {
   display: flex;
   justify-content: space-between;
