@@ -90,7 +90,9 @@ export default function Login() {
                 )}
 
                 <div className="form-group">
-                  <label htmlFor="email" className="sr-only">Nickname ou email address</label>
+                  <label htmlFor="email" className="sr-only">
+                    {isLogin ? 'Nickname ou email address' : 'Email address'}
+                  </label>
                   <input
                     type="text"
                     id="email"
@@ -98,7 +100,7 @@ export default function Login() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    placeholder="Nickname ou email address"
+                    placeholder={isLogin ? 'Nickname ou email address' : 'Email address'}
                     autoComplete="email"
                     aria-required="true"
                   />
