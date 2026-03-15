@@ -1,6 +1,6 @@
 # Dotrak Frontend
 
-Interface React da plataforma gamer Dotrak.
+Interface React da plataforma gamer Dotrak com sistema de login/registro integrado.
 
 ## 🚀 Tecnologias
 
@@ -35,7 +35,7 @@ VITE_API_URL=http://localhost:5000/api
 ```bash
 npm run dev
 ```
-Acesse: http://localhost:5173
+Acesse: http://localhost:3000
 
 ### Build para Produção
 ```bash
@@ -53,8 +53,9 @@ npm run preview
 frontend/
 ├── src/
 │   ├── components/      # Componentes reutilizáveis (Header, Footer)
-│   ├── sections/        # Seções da landing page
-│   ├── pages/           # Páginas (Home, Login)
+│   ├── sections/        # Seções da landing page (Hero, Features, etc)
+│   ├── pages/           # Páginas (Home, Login, Documentation)
+│   ├── hooks/           # React hooks personalizados
 │   ├── data/            # Dados e constantes
 │   ├── styles/          # Estilos globais
 │   ├── App.jsx          # Componente raiz
@@ -78,6 +79,13 @@ frontend/
 
 - Design responsivo (mobile-first)
 - HTML semântico
+- SEO otimizado (meta tags, Open Graph, Twitter Cards)
+- Sistema de autenticação completo
+- Validação de formulários
+- Gerenciamento de estado com localStorage
+- Animações suaves com Intersection Observer
+- Navbar com blur ao scroll
+- Menu mobile responsivo
 - SEO otimizado com meta tags
 - Open Graph + Twitter Cards
 - Acessibilidade (ARIA, contraste, foco)

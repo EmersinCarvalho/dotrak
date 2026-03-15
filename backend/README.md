@@ -1,11 +1,15 @@
 # Dotrak Backend
 
-API REST para a plataforma gamer Dotrak.
+API REST para a plataforma gamer Dotrak com sistema de autenticação completo.
 
 ## 🚀 Tecnologias
 
 - Node.js
 - Express
+- MySQL (mysql2)
+- bcryptjs (hash de senhas)
+- jsonwebtoken (JWT)
+- uuid (IDs únicos)
 - CORS
 - dotenv
 - Nodemon (desenvolvimento)
@@ -23,7 +27,40 @@ npm install
 cp .env.example .env
 ```
 
-2. Configure as variáveis de ambiente no arquivo `.env`
+2. Configure as variáveis de ambiente no arquivo `.env`:
+```env
+# Servidor
+PORT=5000
+NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+
+# JWT
+JWT_SECRET=sua_chave_secreta_aqui
+JWT_EXPIRES_IN=7d
+
+# MySQL Database
+DB_HOST=seu_host
+DB_USER=seu_usuario
+DB_PASS=sua_senha
+DB_NAME=dotrak
+```
+
+**Importante:** O banco de dados e tabelas serão criados automaticamente ao iniciar o servidor.
+
+### Tabelas do Banco de Dados
+
+O sistema cria automaticamente 8 tabelas ao iniciar (caso não existam):
+
+1. **users** - Usuários da plataforma (nickname, email, password)
+2. **games** - Partidas dos jogadores (CS2, Valorant, kills, deaths, etc)
+3. **statistics** - Estatísticas agregadas (win rate, K/D ratio, etc)
+4. **tournaments** - Torneios da plataforma
+5. **tournament_participants** - Participantes dos torneios
+6. **achievements** - Conquistas disponíveis
+7. **user_achievements** - Conquistas desbloqueadas pelos usuários
+8. **analysis_sessions** - Sessões de análise por IA
+
+📄 Arquivo de configuração: `src/config/createTables.js`
 
 ## 🏃 Execução
 
@@ -53,11 +90,49 @@ GET /api/stats
 ```
 Retorna estatísticas da plataforma (jogadores ativos, partidas analisadas, etc.)
 
-### Raiz da API
+### Autenticação
+
+#### Registrar Usuário
 ```
-GET /api
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "nickname": "jogador123",
+  "email": "jogador@email.com",
+  "password": "senha123"
+}
 ```
-Informações sobre a API e endpoints disponíveis.
+
+#### Login
+```
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "jogador@email.com",
+  "password": "senha123"
+}
+```
+
+#### Obter Dados do Usuário (Requer autenticação)
+```
+GET /api/auth/me
+Authorization: Bearer {token}
+```
+
+#### Logout
+```
+POST /api/auth/logout
+Authorization: Bearer {token}
+```
+
+### Validações
+
+- **Nickname:** 3-20 caracteres, apenas letras, números, underscore e hífen. Pode haver duplicados.
+- **Email:** Formato válido e único no sistema.
+- **Password:** Mínimo 6 caracteres.
+- **Token JWT:** Expira em 7 dias.
 
 ## 📁 Estrutura
 
@@ -66,8 +141,9 @@ backend/
 ├── src/
 │   ├── routes/          # Definição de rotas
 │   ├── controllers/     # Lógica de negócio
-│   ├── middlewares/     # Middlewares customizados
-│   └── config/          # Configurações
+│   ├── models/          # Modelos de dados (User)
+│   ├── middlewares/     # Middlewares (auth JWT)
+│   └── config/          # Configurações (database)
 ├── server.js            # Arquivo principal
 ├── package.json
 ├── .env.example
@@ -77,7 +153,10 @@ backend/
 ## 🔒 Segurança
 
 - CORS configurado para origens específicas
-- Preparado para implementação de JWT
+- Senhas hasheadas com bcryptjs (salt rounds: 10)
+- Autenticação JWT com expiração configurável
+- Validações de entrada rigorosas
+- Middleware de autenticação para rotas protegidas
 - Tratamento de erros centralizado
 
 ## 🚢 Deploy

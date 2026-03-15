@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import { createAllTables } from './createTables.js';
 
 /**
  * Configuração do banco de dados MySQL
@@ -47,21 +48,8 @@ export const connectDatabase = async () => {
     const connection = await pool.getConnection();
     console.log('✅ Conectado ao banco de dados MySQL');
     
-    // Criar tabela de usuários se não existir
-    await connection.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id VARCHAR(36) PRIMARY KEY,
-        nickname VARCHAR(50) NOT NULL,
-        email VARCHAR(255) NOT NULL UNIQUE,
-        password VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX idx_email (email),
-        INDEX idx_nickname (nickname)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-    `);
-    
-    console.log('✅ Tabela de usuários verificada/criada');
+    // Criar todas as tabelas necessárias
+    await createAllTables(connection);
     
     connection.release();
     

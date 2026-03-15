@@ -19,6 +19,10 @@ Dotrak é uma plataforma completa para gamers competitivos que oferece análise 
 ### Backend
 - Node.js
 - Express
+- MySQL (mysql2)
+- bcryptjs (hash de senhas)
+- jsonwebtoken (JWT)
+- uuid (IDs únicos)
 - CORS
 - dotenv
 - Nodemon
@@ -45,10 +49,11 @@ dotrak/
 │
 ├── backend/               # API REST Node.js
 │   ├── src/
-│   │   ├── routes/       # Definição de rotas
+│   │   ├── routes/       # Definição de rotas (auth, health, stats)
 │   │   ├── controllers/  # Lógica de negócio
-│   │   ├── middlewares/  # Middlewares customizados
-│   │   └── config/       # Configurações
+│   │   ├── middlewares/  # Middlewares customizados (auth JWT)
+│   │   ├── models/       # Modelos de dados (User)
+│   │   └── config/       # Configurações (database)
 │   ├── server.js         # Arquivo principal
 │   ├── package.json
 │   ├── .env.example
@@ -88,10 +93,14 @@ npm install
 npm run dev
 ```
 
+Após executar, acesse:
+- **Frontend:** http://localhost:3000
+- **Backend API:** http://localhost:5000/api
+
 ### Desenvolvimento - Individual
 
 ```bash
-# Frontend (porta 5173)
+# Frontend (porta 3000)
 npm run dev:frontend
 
 # Backend (porta 5000)
@@ -108,9 +117,38 @@ npm run build:frontend
 npm run start:backend
 ```
 
+## ⚙️ Comandos Disponíveis
+
+### Na Raiz do Projeto
+
+```bash
+# Instalar todas as dependências (root, frontend e backend)
+npm run install:all
+
+# Iniciar frontend e backend juntos (desenvolvimento)
+npm run dev
+
+# Iniciar apenas o frontend
+npm run dev:frontend
+
+# Iniciar apenas o backend
+npm run dev:backend
+
+# Build do frontend (produção)
+npm run build:frontend
+
+# Iniciar backend em produção
+npm run start:backend
+
+# Limpar node_modules de todos os projetos
+npm run clean
+```
+
 ## 🔧 Configuração
 
-### Frontend
+### Variáveis de Ambiente
+
+#### Frontend (.env)
 
 1. Copie `.env.example` para `.env`:
 ```bash
@@ -123,7 +161,7 @@ cp .env.example .env
 VITE_API_URL=http://localhost:5000/api
 ```
 
-### Backend
+#### Backend (.env)
 
 1. Copie `.env.example` para `.env`:
 ```bash
@@ -133,10 +171,42 @@ cp .env.example .env
 
 2. Configure as variáveis:
 ```env
+# Servidor
 PORT=5000
 NODE_ENV=development
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=http://localhost:3000
+
+# JWT
+JWT_SECRET=sua_chave_secreta_aqui
+JWT_EXPIRES_IN=7d
+
+# MySQL Database
+DB_HOST=seu_host
+DB_USER=seu_usuario
+DB_PASS=sua_senha
+DB_NAME=dotrak
 ```
+
+**Importante:** O banco de dados e todas as tabelas necessárias serão criadas automaticamente ao iniciar o backend.
+
+### Tabelas do Banco de Dados
+
+O sistema cria automaticamente as seguintes tabelas ao iniciar (caso não existam):
+
+1. **users** - Usuários da plataforma
+2. **games** - Partidas dos jogadores (CS2, Valorant, etc)
+3. **statistics** - Estatísticas agregadas por jogador e jogo
+4. **tournaments** - Torneios da plataforma
+5. **tournament_participants** - Participantes dos torneios
+6. **achievements** - Conquistas disponíveis
+7. **user_achievements** - Conquistas desbloqueadas pelos usuários
+8. **analysis_sessions** - Sessões de análise por IA
+
+Todas as tabelas utilizam:
+- `ENGINE=InnoDB` para suporte a transações
+- `CHARSET=utf8mb4` para suporte completo a emojis e caracteres especiais
+- Índices otimizados para queries frequentes
+- Foreign keys com `ON DELETE CASCADE` para integridade referencial
 
 ## 📡 Endpoints da API
 
@@ -151,6 +221,50 @@ Verifica o status do servidor.
 GET /api/stats
 ```
 Retorna estatísticas em tempo real (jogadores ativos, partidas analisadas, etc).
+
+### Autenticação
+
+#### Registrar Usuário
+```
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "nickname": "jogador123",
+  "email": "jogador@email.com",
+  "password": "senha123"
+}
+```
+
+#### Login
+```
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "jogador@email.com",
+  "password": "senha123"
+}
+```
+
+#### Obter Dados do Usuário (Requer autenticação)
+```
+GET /api/auth/me
+Authorization: Bearer {token}
+```
+
+#### Logout
+```
+POST /api/auth/logout
+Authorization: Bearer {token}
+```
+
+### Validações
+
+- **Nickname:** 3-20 caracteres, apenas letras, números, underscore e hífen. Pode haver duplicados.
+- **Email:** Formato válido e único no sistema.
+- **Password:** Mínimo 6 caracteres.
+- **Token JWT:** Expira em 7 dias.
 
 ## 🎨 Identidade Visual
 
@@ -171,18 +285,54 @@ Retorna estatísticas em tempo real (jogadores ativos, partidas analisadas, etc)
 - ✅ Navbar com blur ao scroll
 - ✅ Menu mobile
 - ✅ Integração com API backend
-- ✅ Página de login completa
+- ✅ Sistema de login e registro completo
+- ✅ Validação de formulários
+- ✅ Gerenciamento de autenticação (localStorage)
 
 ### Backend
 - ✅ API REST estruturada
 - ✅ CORS configurado
 - ✅ Rotas organizadas
-- ✅ Middlewares preparados
+- ✅ Middlewares de autenticação JWT
 - ✅ Tratamento de erros
-- ✅ Preparado para autenticação JWT
+- ✅ Sistema de autenticação completo
+- ✅ Banco de dados MySQL integrado
+- ✅ Hash de senhas com bcryptjs
 - ✅ Estrutura escalável
+- ✅ Auto-criação de tabelas no banco
 
-## 🚢 Deploy no cPanel
+## � Troubleshooting
+
+### Porta já em uso
+
+Se você receber erro de porta em uso:
+
+**Windows (PowerShell):**
+```powershell
+# Parar todos os processos Node.js
+Get-Process -Name node | Stop-Process -Force
+```
+
+**Linux/Mac:**
+```bash
+# Parar processos nas portas específicas
+kill $(lsof -t -i:3000)  # Frontend
+kill $(lsof -t -i:5000)  # Backend
+```
+
+### Erro de conexão com o banco de dados
+
+- Verifique se as credenciais do MySQL estão corretas no arquivo `.env`
+- Confirme que o banco de dados existe e está acessível
+- A tabela `users` será criada automaticamente na primeira execução
+
+### Frontend não conecta com Backend
+
+- Verifique se o backend está rodando na porta 5000
+- Confirme que o `VITE_API_URL` no frontend está configurado corretamente
+- Verifique se o CORS no backend está permitindo a origem do frontend
+
+## �🚢 Deploy no cPanel
 
 ### Frontend
 
