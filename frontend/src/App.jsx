@@ -7,6 +7,7 @@ import './styles/global.css';
 
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const Documentation = lazy(() => import('./pages/Documentation'));
@@ -14,20 +15,22 @@ const Documentation = lazy(() => import('./pages/Documentation'));
 function Layout() {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
+  const isDashboardPage = location.pathname === '/dashboard';
 
   return (
     <>
-      {!isLoginPage && <Header />}
+      {!isLoginPage && !isDashboardPage && <Header />}
       <Suspense fallback={<div className="loading-screen">Carregando...</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/privacidade" element={<PrivacyPolicy />} />
           <Route path="/termos" element={<TermsOfService />} />
           <Route path="/documentacao" element={<Documentation />} />
         </Routes>
       </Suspense>
-      {!isLoginPage && <Footer />}
+      {!isLoginPage && !isDashboardPage && <Footer />}
     </>
   );
 }

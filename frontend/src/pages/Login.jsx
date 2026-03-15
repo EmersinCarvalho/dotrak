@@ -85,9 +85,9 @@ export default function Login() {
       localStorage.setItem('dotrak_token', data.data.token);
       localStorage.setItem('dotrak_user', JSON.stringify(data.data.user));
 
-      // Redirecionar após 1 segundo
+      // Redirecionar para dashboard após 1 segundo
       setTimeout(() => {
-        navigate('/');
+        navigate('/dashboard');
       }, 1000);
 
     } catch (error) {
