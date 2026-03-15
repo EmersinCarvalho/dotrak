@@ -187,26 +187,24 @@ DB_PASS=sua_senha
 DB_NAME=dotrak
 ```
 
-**Importante:** O banco de dados e todas as tabelas necessárias serão criadas automaticamente ao iniciar o backend.
+**Importante:** O banco de dados e a tabela de usuários será criada automaticamente ao iniciar o backend.
 
-### Tabelas do Banco de Dados
+### Tabela do Banco de Dados
 
-O sistema cria automaticamente as seguintes tabelas ao iniciar (caso não existam):
+O sistema cria automaticamente a seguinte tabela ao iniciar (caso não exista):
 
-1. **users** - Usuários da plataforma
-2. **games** - Partidas dos jogadores (CS2, Valorant, etc)
-3. **statistics** - Estatísticas agregadas por jogador e jogo
-4. **tournaments** - Torneios da plataforma
-5. **tournament_participants** - Participantes dos torneios
-6. **achievements** - Conquistas disponíveis
-7. **user_achievements** - Conquistas desbloqueadas pelos usuários
-8. **analysis_sessions** - Sessões de análise por IA
+**users** - Usuários da plataforma
+- `id` (VARCHAR 36) - UUID único do usuário
+- `nickname` (VARCHAR 50) - Nome de exibição do jogador (pode ter duplicados)
+- `email` (VARCHAR 255) - Email único para login
+- `password` (VARCHAR 255) - Senha hasheada com bcryptjs
+- `created_at` (TIMESTAMP) - Data de criação da conta
+- `updated_at` (TIMESTAMP) - Data da última atualização
 
-Todas as tabelas utilizam:
+Características:
 - `ENGINE=InnoDB` para suporte a transações
 - `CHARSET=utf8mb4` para suporte completo a emojis e caracteres especiais
-- Índices otimizados para queries frequentes
-- Foreign keys com `ON DELETE CASCADE` para integridade referencial
+- Índices otimizados em email e nickname para queries rápidas
 
 ## 📡 Endpoints da API
 

@@ -45,20 +45,19 @@ DB_PASS=sua_senha
 DB_NAME=dotrak
 ```
 
-**Importante:** O banco de dados e tabelas serão criados automaticamente ao iniciar o servidor.
+**Importante:** O banco de dados e a tabela de usuários será criada automaticamente ao iniciar o servidor.
 
-### Tabelas do Banco de Dados
+### Tabela do Banco de Dados
 
-O sistema cria automaticamente 8 tabelas ao iniciar (caso não existam):
+O sistema cria automaticamente a tabela ao iniciar (caso não exista):
 
-1. **users** - Usuários da plataforma (nickname, email, password)
-2. **games** - Partidas dos jogadores (CS2, Valorant, kills, deaths, etc)
-3. **statistics** - Estatísticas agregadas (win rate, K/D ratio, etc)
-4. **tournaments** - Torneios da plataforma
-5. **tournament_participants** - Participantes dos torneios
-6. **achievements** - Conquistas disponíveis
-7. **user_achievements** - Conquistas desbloqueadas pelos usuários
-8. **analysis_sessions** - Sessões de análise por IA
+**users** - Usuários da plataforma
+- `id` - UUID único
+- `nickname` - Nome de exibição (3-20 caracteres, pode ter duplicados)
+- `email` - Email único para login
+- `password` - Senha hasheada com bcryptjs (salt rounds: 10)
+- `created_at` - Data de criação
+- `updated_at` - Data de atualização
 
 📄 Arquivo de configuração: `src/config/createTables.js`
 
