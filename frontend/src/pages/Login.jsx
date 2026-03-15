@@ -1,19 +1,24 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import './Login.css';
 import heroImage from '../assets/2.jpg';
 import logo from '../assets/logo.png';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 export default function Login() {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     nickname: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
-  const [passwordError, setPasswordError] = useState('');
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -21,20 +26,76 @@ export default function Login() {
       ...formData,
       [name]: type === 'checkbox' ? checked : value,
     });
+    // Limpar erro do campo quando usuário começar a digitar
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: '' });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
+    setSuccessMessage('');
     
     // Validar senhas no Sign Up
     if (!isLogin && formData.password !== formData.confirmPassword) {
-      setPasswordError('As senhas não correspondem');
+      setErrors({ confirmPassword: 'As senhas não correspondem' });
       return;
     }
     
-    setPasswordError('');
-    console.log('Form submitted:', formData);
-    // Implementar lógica de autenticação aqui
+    setIsLoading(true);
+
+    try {
+      const endpoint = isLogin ? '/auth/login' : '/auth/register';
+      const payload = isLogin 
+        ? { 
+            email: formData.email, 
+            password: formData.password 
+          }
+        : { 
+            nickname: formData.nickname,
+            email: formData.email, 
+            password: formData.password 
+          };
+
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Tratar erros específicos
+        if (data.fields) {
+          setErrors(data.fields);
+        } else {
+          setErrors({ general: data.error || 'Ocorreu um erro' });
+        }
+        return;
+      }
+
+      // Sucesso!
+      setSuccessMessage(data.message);
+      
+      // Salvar token no localStorage
+      localStorage.setItem('dotrak_token', data.data.token);
+      localStorage.setItem('dotrak_user', JSON.stringify(data.data.user));
+
+      // Redirecionar após 1 segundo
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      setErrors({ general: 'Erro ao conectar com o servidor. Tente novamente.' });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,6 +132,18 @@ export default function Login() {
                 {isLogin ? 'Login' : 'Sign Up'}
               </h2>
 
+              {/* Mensagens de erro/sucesso */}
+              {errors.general && (
+                <div className="alert alert-error" role="alert">
+                  {errors.general}
+                </div>
+              )}
+              {successMessage && (
+                <div className="alert alert-success" role="alert">
+                  {successMessage}
+                </div>
+              )}
+
               <form className="login-form" onSubmit={handleSubmit} aria-label={isLogin ? 'Login form' : 'Sign up form'}>
                 {!isLogin && (
                   <div className="form-group">
@@ -85,25 +158,35 @@ export default function Login() {
                       placeholder="Nickname"
                       autoComplete="username"
                       aria-required="true"
+                      aria-invalid={errors.nickname ? "true" : "false"}
+                      disabled={isLoading}
                     />
+                    {errors.nickname && (
+                      <span className="error-message" role="alert">{errors.nickname}</span>
+                    )}
                   </div>
                 )}
 
                 <div className="form-group">
                   <label htmlFor="email" className="sr-only">
-                    {isLogin ? 'Nickname ou email address' : 'Email address'}
+                    Email address
                   </label>
                   <input
-                    type="text"
+                    type="email"
                     id="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    placeholder={isLogin ? 'Nickname ou email address' : 'Email address'}
+                    placeholder="Email address"
                     autoComplete="email"
                     aria-required="true"
+                    aria-invalid={errors.email ? "true" : "false"}
+                    disabled={isLoading}
                   />
+                  {errors.email && (
+                    <span className="error-message" role="alert">{errors.email}</span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -118,7 +201,12 @@ export default function Login() {
                     placeholder="Password"
                     autoComplete={isLogin ? "current-password" : "new-password"}
                     aria-required="true"
+                    aria-invalid={errors.password ? "true" : "false"}
+                    disabled={isLoading}
                   />
+                  {errors.password && (
+                    <span className="error-message" role="alert">{errors.password}</span>
+                  )}
                 </div>
 
                 {!isLogin && (
@@ -134,10 +222,11 @@ export default function Login() {
                       placeholder="Confirm Password"
                       autoComplete="new-password"
                       aria-required="true"
-                      aria-invalid={passwordError ? "true" : "false"}
+                      aria-invalid={errors.confirmPassword ? "true" : "false"}
+                      disabled={isLoading}
                     />
-                    {passwordError && (
-                      <span className="error-message" role="alert">{passwordError}</span>
+                    {errors.confirmPassword && (
+                      <span className="error-message" role="alert">{errors.confirmPassword}</span>
                     )}
                   </div>
                 )}
@@ -145,7 +234,7 @@ export default function Login() {
                 {isLogin && (
                   <div className="form-options">
                     <label className="checkbox-label">
-                      <input type="checkbox" name="rememberMe" />
+                      <input type="checkbox" name="rememberMe" disabled={isLoading} />
                       <span>Remember me</span>
                     </label>
                     <a href="/recuperar-senha" className="forgot-link">
@@ -154,8 +243,8 @@ export default function Login() {
                   </div>
                 )}
 
-                <button type="submit" className="btn btn-primary btn-full">
-                  {isLogin ? 'Login' : 'Join us'} →
+                <button type="submit" className="btn btn-primary btn-full" disabled={isLoading}>
+                  {isLoading ? 'Carregando...' : (isLogin ? 'Login' : 'Join us')} →
                 </button>
               </form>
 

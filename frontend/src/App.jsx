@@ -9,6 +9,7 @@ const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const Documentation = lazy(() => import('./pages/Documentation'));
 
 function Layout() {
   const location = useLocation();
@@ -23,6 +24,7 @@ function Layout() {
           <Route path="/login" element={<Login />} />
           <Route path="/privacidade" element={<PrivacyPolicy />} />
           <Route path="/termos" element={<TermsOfService />} />
+          <Route path="/documentacao" element={<Documentation />} />
         </Routes>
       </Suspense>
       {!isLoginPage && <Footer />}
