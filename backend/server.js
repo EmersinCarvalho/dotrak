@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import apiRoutes from './src/routes/index.js';
+import { connectDatabase } from './src/config/database.js';
 
 // Configurar variáveis de ambiente
 dotenv.config();
@@ -51,10 +52,23 @@ app.use((err, req, res, next) => {
 });
 
 // Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor Dotrak rodando na porta ${PORT}`);
-  console.log(`📍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🌐 CORS habilitado para: ${corsOptions.origin}`);
-});
+const startServer = async () => {
+  try {
+    // Conectar ao banco de dados
+    await connectDatabase();
+    
+    // Iniciar servidor
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor Dotrak rodando na porta ${PORT}`);
+      console.log(`📍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🌐 CORS habilitado para: ${corsOptions.origin}`);
+    });
+  } catch (error) {
+    console.error('❌ Erro ao iniciar servidor:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
 
 export default app;

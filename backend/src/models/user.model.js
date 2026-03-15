@@ -1,26 +1,18 @@
 import bcrypt from 'bcryptjs';
+import { v4 as uuidv4 } from 'uuid';
+import { getPool } from '../config/database.js';
 
 /**
  * Classe User - Modelo de usuário
- * Por enquanto, usa armazenamento em memória
- * TODO: Integrar com banco de dados real (MongoDB, PostgreSQL, etc)
  */
 class User {
-  constructor(nickname, email, password) {
-    this.id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
-    this.nickname = nickname;
-    this.email = email.toLowerCase();
-    this.password = password; // Será hasheado
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
-  }
-
-  /**
-   * Hash da senha antes de salvar
-   */
-  async hashPassword() {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+  constructor(data) {
+    this.id = data.id;
+    this.nickname = data.nickname;
+    this.email = data.email;
+    this.password = data.password;
+    this.createdAt = data.created_at;
+    this.updatedAt = data.updated_at;
   }
 
   /**
@@ -44,88 +36,152 @@ class User {
   }
 }
 
-// Armazenamento em memória (temporário)
-const users = [];
-
 /**
- * Repositório de usuários
+ * Repositório de usuários - Interface com banco de dados MySQL
  */
 export const UserRepository = {
   /**
    * Criar novo usuário
    */
   async create(nickname, email, password) {
-    const user = new User(nickname, email, password);
-    await user.hashPassword();
-    users.push(user);
-    return user;
+    const pool = getPool();
+    const id = uuidv4();
+    
+    // Hash da senha
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    
+    // Inserir no banco
+    const [result] = await pool.query(
+      'INSERT INTO users (id, nickname, email, password) VALUES (?, ?, ?, ?)',
+      [id, nickname, email.toLowerCase(), hashedPassword]
+    );
+    
+    // Buscar usuário criado
+    const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
+    return new User(rows[0]);
   },
 
   /**
    * Buscar usuário por email
    */
   async findByEmail(email) {
-    return users.find(user => user.email === email.toLowerCase());
+    const pool = getPool();
+    const [rows] = await pool.query(
+      'SELECT * FROM users WHERE email = ?',
+      [email.toLowerCase()]
+    );
+    
+    if (rows.length === 0) return null;
+    return new User(rows[0]);
   },
 
   /**
    * Buscar usuário por nickname
    */
   async findByNickname(nickname) {
-    return users.find(user => user.nickname === nickname);
+    const pool = getPool();
+    const [rows] = await pool.query(
+      'SELECT * FROM users WHERE nickname = ?',
+      [nickname]
+    );
+    
+    if (rows.length === 0) return null;
+    return new User(rows[0]);
   },
 
   /**
    * Buscar usuário por ID
    */
   async findById(id) {
-    return users.find(user => user.id === id);
+    const pool = getPool();
+    const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
+    
+    if (rows.length === 0) return null;
+    return new User(rows[0]);
   },
 
   /**
    * Verificar se email já existe
    */
   async emailExists(email) {
-    return users.some(user => user.email === email.toLowerCase());
+    const pool = getPool();
+    const [rows] = await pool.query(
+      'SELECT COUNT(*) as count FROM users WHERE email = ?',
+      [email.toLowerCase()]
+    );
+    
+    return rows[0].count > 0;
   },
 
   /**
    * Verificar se nickname já existe
    */
   async nicknameExists(nickname) {
-    return users.some(user => user.nickname === nickname);
+    const pool = getPool();
+    const [rows] = await pool.query(
+      'SELECT COUNT(*) as count FROM users WHERE nickname = ?',
+      [nickname]
+    );
+    
+    return rows[0].count > 0;
   },
 
   /**
    * Listar todos os usuários (sem senhas)
    */
   async findAll() {
-    return users.map(user => user.toJSON());
+    const pool = getPool();
+    const [rows] = await pool.query('SELECT * FROM users');
+    
+    return rows.map(row => new User(row).toJSON());
   },
 
   /**
    * Atualizar usuário
    */
   async update(id, updates) {
-    const userIndex = users.findIndex(user => user.id === id);
-    if (userIndex === -1) return null;
+    const pool = getPool();
     
-    const user = users[userIndex];
-    Object.assign(user, updates);
-    user.updatedAt = new Date();
+    // Construir query dinâmica baseada nos campos a atualizar
+    const fields = [];
+    const values = [];
     
-    return user;
+    if (updates.nickname) {
+      fields.push('nickname = ?');
+      values.push(updates.nickname);
+    }
+    if (updates.email) {
+      fields.push('email = ?');
+      values.push(updates.email.toLowerCase());
+    }
+    if (updates.password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(updates.password, salt);
+      fields.push('password = ?');
+      values.push(hashedPassword);
+    }
+    
+    if (fields.length === 0) return null;
+    
+    values.push(id);
+    
+    await pool.query(
+      `UPDATE users SET ${fields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+      values
+    );
+    
+    return await this.findById(id);
   },
 
   /**
    * Deletar usuário
    */
   async delete(id) {
-    const userIndex = users.findIndex(user => user.id === id);
-    if (userIndex === -1) return false;
+    const pool = getPool();
+    const [result] = await pool.query('DELETE FROM users WHERE id = ?', [id]);
     
-    users.splice(userIndex, 1);
-    return true;
+    return result.affectedRows > 0;
   }
 };
 
